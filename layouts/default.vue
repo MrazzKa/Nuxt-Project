@@ -5,13 +5,13 @@
       <span class="text-xl font-bold text-green-700 italic">Literally me</span>
     </div>
 
-    <!-- Burger Menu Button -->
+    <!-- Кнопка бургера -->
     <button @click="switch_burger" class="sm:hidden text-green-700 text-3xl">
       <span v-if="!burger">☰</span>
       <span v-else>✖</span>
     </button>
 
-    <!-- Navigation (Desktop) -->
+    <!-- Навбар -->
     <nav class="hidden sm:flex items-center gap-6">
       <NuxtLink to="/" class="nav-link">Home</NuxtLink>
       <div class="relative">
@@ -26,7 +26,7 @@
       <NuxtLink to="/logout" class="nav-link">LogOut</NuxtLink>
     </nav>
 
-    <!-- Mobile Burger Menu -->
+    <!-- Бургер на мобилках -->
     <div v-show="burger" class="absolute left-0 top-full w-full bg-green-50 flex flex-col items-center py-6 sm:hidden">
       <NuxtLink to="/" class="burger-link">Home</NuxtLink>
       <button class="burger-link" @click="switch_submenu">Labs</button>
@@ -58,7 +58,7 @@ import youtubeIcon from '~/assets/images/youtube.png';
 import githubIcon from '~/assets/images/github.png';
 import facebookIcon from '~/assets/images/facebook.png';
 
-// Google Tag Manager Integration
+// Гугл таг
 useHead({
   script: [
     {
