@@ -1,50 +1,54 @@
 <template>
-  <header class="flex items-center justify-between bg-green-100 py-4 px-6 shadow relative">
-    <div class="flex items-center gap-4">
-      <img src="~/assets/images/tima.jpg" class="w-14 h-14 rounded-full border-2 border-green-600 shadow-md" alt="Tima" />
-      <span class="text-xl font-bold text-green-700 italic">Literally me</span>
+  <header class="relative bg-gray-900 text-yellow-400 shadow-md z-50"> <!-- Ensure header has z-index -->
+    <div class="flex items-center justify-between py-4 px-6">
+      <!-- Profile -->
+      <div class="flex items-center gap-4">
+        <img src="~/assets/images/logo game.png" class="w-32 h-auto object-contain" alt="Tima" />
+        <span class="text-xl font-bold italic">The Binding of Isaac</span>
+      </div>
+
+      <!-- Burger Button (Mobile) -->
+      <button @click="switch_burger" class="sm:hidden text-yellow-400 text-3xl z-50">
+        <span v-if="!burger">☰</span>
+        <span v-else>✖</span>
+      </button>
+
+      <!-- Navbar (Desktop) -->
+      <nav class="hidden sm:flex items-center gap-6">
+        <NuxtLink to="/" class="nav-link">Home</NuxtLink>
+        <div class="relative">
+          <button class="nav-link" @click="switch_submenu">Labs</button>
+          <div v-show="submenu" class="submenu">
+            <NuxtLink v-for="lab in labs" :key="lab.path" :to="lab.path" class="submenu-item">
+              {{ lab.name }}
+            </NuxtLink>
+          </div>
+        </div>
+        <NuxtLink to="/login" class="nav-link">LogIn</NuxtLink>
+        <NuxtLink to="/logout" class="nav-link">LogOut</NuxtLink>
+      </nav>
     </div>
 
-    <!-- Кнопка бургера -->
-    <button @click="switch_burger" class="sm:hidden text-green-700 text-3xl">
-      <span v-if="!burger">☰</span>
-      <span v-else>✖</span>
-    </button>
-
-    <!-- Навбар -->
-    <nav class="hidden sm:flex items-center gap-6">
-      <NuxtLink to="/" class="nav-link">Home</NuxtLink>
-      <div class="relative">
-        <button class="nav-link" @click="switch_submenu">Labs</button>
-        <div v-show="submenu" class="submenu">
-          <NuxtLink v-for="lab in labs" :key="lab.path" :to="lab.path" class="submenu-item">
-            {{ lab.name }}
-          </NuxtLink>
-        </div>
-      </div>
-      <NuxtLink to="/login" class="nav-link">LogIn</NuxtLink>
-      <NuxtLink to="/logout" class="nav-link">LogOut</NuxtLink>
-    </nav>
-
-    <!-- Бургер на мобилках -->
-    <div v-show="burger" class="absolute left-0 top-full w-full bg-green-50 flex flex-col items-center py-6 sm:hidden">
-      <NuxtLink to="/" class="burger-link">Home</NuxtLink>
+    <!-- Burger Menu (Mobile) -->
+    <div v-show="burger"
+         class="absolute top-full left-0 w-full bg-gray-900 text-yellow-400 flex flex-col items-center py-6 border-t border-yellow-500 shadow-lg z-50"> 
+      <NuxtLink to="/" class="burger-link" @click="closeMenus">Home</NuxtLink>
       <button class="burger-link" @click="switch_submenu">Labs</button>
       <div v-show="submenu" class="w-full flex flex-col">
-        <NuxtLink v-for="lab in labs" :key="lab.path" :to="lab.path" class="burger-submenu">
+        <NuxtLink v-for="lab in labs" :key="lab.path" :to="lab.path" class="burger-submenu" @click="closeMenus">
           {{ lab.name }}
         </NuxtLink>
       </div>
-      <NuxtLink to="/login" class="burger-link">LogIn</NuxtLink>
-      <NuxtLink to="/logout" class="burger-link">LogOut</NuxtLink>
+      <NuxtLink to="/login" class="burger-link" @click="closeMenus">LogIn</NuxtLink>
+      <NuxtLink to="/logout" class="burger-link" @click="closeMenus">LogOut</NuxtLink>
     </div>
   </header>
 
-  <main class="p-5 bg-gray-50 min-h-screen">
+  <main class="relative p-5 bg-gray-800 min-h-screen text-yellow-400 z-10"> <!-- Lower priority z-index -->
     <slot />
   </main>
 
-  <footer class="flex justify-center gap-4 bg-green-100 border-t px-4 py-3">
+  <footer class="relative flex justify-center gap-4 bg-gray-900 border-t border-yellow-500 px-4 py-3 z-10">
     <a v-for="icon in socialIcons" :key="icon.href" :href="icon.href" target="_blank">
       <img :src="icon.img" class="w-10 h-10 sm:w-16 sm:h-16 hover:scale-110 transition-transform" alt="Social Icon" />
     </a>
@@ -52,33 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { useHead } from '#app';
 import { ref } from 'vue';
-import youtubeIcon from '~/assets/images/youtube.png';
-import githubIcon from '~/assets/images/github.png';
-import facebookIcon from '~/assets/images/facebook.png';
-
-// Гугл таг
-useHead({
-  script: [
-    {
-      async: true,
-      src: 'https://www.googletagmanager.com/gtag/js?id=G-XBXW09ZY7H',
-    },
-    {
-      innerHTML: `
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-XBXW09ZY7H');
-      `,
-      type: 'text/javascript',
-    },
-  ],
-  __dangerouslyDisableSanitizersByTagID: {
-    gtag: ['innerHTML'],
-  },
-});
 
 // Reactive Variables
 const burger = ref(false);
@@ -93,6 +71,11 @@ const switch_submenu = () => {
   submenu.value = !submenu.value;
 };
 
+const closeMenus = () => {
+  burger.value = false;
+  submenu.value = false;
+};
+
 const labs = [
   { name: 'Lab3', path: '/Lab3' },
   { name: 'Lab4', path: '/Lab4' },
@@ -101,30 +84,33 @@ const labs = [
 ];
 
 const socialIcons = [
-  { href: 'https://www.youtube.com/', img: youtubeIcon },
-  { href: 'https://www.github.com/', img: githubIcon },
-  { href: 'https://www.facebook.com/', img: facebookIcon }
+  { href: 'https://www.youtube.com/', img: '/youtube.png' },
+  { href: 'https://www.github.com/', img: '/github.png' },
+  { href: 'https://www.facebook.com/', img: '/facebook.png' }
 ];
+
 </script>
 
 <style scoped>
+/* Navbar Styles */
 .nav-link {
-  @apply p-2 text-green-700 hover:bg-green-200 hover:text-green-900 rounded-lg transition;
+  @apply p-2 text-yellow-400 hover:bg-yellow-500 hover:text-gray-900 rounded-lg transition;
 }
 
 .submenu {
-  @apply absolute top-full left-0 bg-green-50 text-green-700 w-40 text-center shadow-md sm:w-48 rounded-md;
+  @apply absolute top-full left-0 bg-gray-800 text-yellow-400 w-40 text-center shadow-md sm:w-48 rounded-md;
 }
 
 .submenu-item {
-  @apply block px-4 py-2 border-b border-green-200 hover:bg-green-300 hover:text-green-900;
+  @apply block px-4 py-2 border-b border-yellow-500 hover:bg-yellow-500 hover:text-gray-900;
 }
 
+/* Burger Menu */
 .burger-link {
-  @apply w-full text-center py-4 text-xl border-b border-green-200 hover:bg-green-300 hover:text-green-900;
+  @apply w-full text-center py-4 text-xl border-b border-yellow-500 hover:bg-yellow-500 hover:text-gray-900;
 }
 
 .burger-submenu {
-  @apply w-full text-center py-3 text-lg bg-green-200 border-b border-green-300 hover:bg-green-400 hover:text-green-900;
+  @apply w-full text-center py-3 text-lg bg-yellow-500 text-gray-900 border-b border-yellow-600 hover:bg-yellow-400;
 }
 </style>
