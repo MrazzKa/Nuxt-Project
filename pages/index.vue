@@ -4,7 +4,7 @@
       <h1 class="title">World of Isaac</h1>
       <p class="subtitle">Explore the depths, uncover secrets, and survive the nightmare.</p>
       
-      <!-- Azazel GIF -->
+      <!-- Гифка Азазеля -->
       <div class="gif-container">
         <img :src="azazelGif" alt="Azazel GIF" class="gif" />
       </div>
